@@ -9,6 +9,10 @@ site_name: Dev Day Journal
 # repo_url
 
 site_description: Dev Day Journal 🤔📘
+plugins: 
+  - search
+  - tags:
+      tags_file: tags.md
 theme:
   name: material
 markdown_extensions:
