@@ -1,19 +1,22 @@
-name: mkdocs
+name: ci 
 on:
   push:
     branches:
+      - master 
       - main
+permissions:
+  contents: write
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Python
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.x
-      - name: Install mkdocs-material
-        run: pip install mkdocs-material
-      - name: Publish to gh-pages
-        run: mkdocs gh-deploy --force
+      - uses: actions/cache@v2
+        with:
+          key: ${{ github.ref }}
+          path: .cache
+      - run: pip install mkdocs-material 
+      - run: mkdocs gh-deploy --force
