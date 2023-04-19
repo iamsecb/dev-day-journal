@@ -13,6 +13,7 @@ plugins:
   - search
   - tags:
       tags_file: tags.md
+  - drawio_file
 theme:
   name: material
 markdown_extensions:
