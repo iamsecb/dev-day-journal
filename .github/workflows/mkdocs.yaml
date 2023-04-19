@@ -18,5 +18,5 @@ jobs:
         with:
           key: ${{ github.ref }}
           path: .cache
-      - run: pip install mkdocs-material drawio_file
+      - run: pip install mkdocs-material mkdocs-drawio-file
       - run: mkdocs gh-deploy --force
