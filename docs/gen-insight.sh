@@ -6,6 +6,6 @@ TITLE="insights"
 
 mkdir -p "$TITLE/$Y"
 
-cat <<EOF > "$TITLE/$Y/$(date +'%d%m %a').md"
+cat <<EOF > "$TITLE/$Y/$(date +'%d%m-%a-%y').md"
 ## Insights
 EOF
