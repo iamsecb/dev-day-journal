@@ -4,10 +4,6 @@ tags:
   - go
 ---
 
-## Insights
-
-### Adapter pattern
-
 An interesting article that describes the need for the adapter pattern.
 
 <https://bitfieldconsulting.com/golang/adapter>

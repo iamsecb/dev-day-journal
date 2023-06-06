@@ -6,6 +6,9 @@ TITLE="retrospectives"
 
 mkdir -p "$TITLE/$Y"
 
-cat <<EOF > "$TITLE/$Y/$(date +'%d%m-%a-%y').md"
-## Retrospective
+cat <<EOF > "$TITLE/$Y/$FN.md"
+---
+tags:
+  - 
+---
 EOF
