@@ -51,7 +51,8 @@ This is a collection of resources to skill up in Cloud and Backend Engineering.
 - GitOps and Kubernetes `book`
 
 - **EKS**
-	- AWS EKS Kubernetes-Masterclass ``
+	- AWS EKS Kubernetes-Masterclass `course:udemy`
+
 
 
 ## Authentication & Authorization
