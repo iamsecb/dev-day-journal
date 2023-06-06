@@ -11,6 +11,7 @@ site_name: Dev Day Journal
 site_description: Dev Day Journal 🤔📘
 plugins: 
   - search
+  - markmap
   - tags:
       tags_file: tags.md
   - drawio_file
