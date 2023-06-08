@@ -75,6 +75,7 @@ This is a collection of resources to skill up in Cloud and Backend Engineering.
 	- Distributed Services with Go `book`
 	- [Distributed systems for fun and profit](http://book.mixu.net/distsys/single-page.html) `book`
 	- [High Scaleability](http://highscalability.com/) `blog`
+	- [needcode.io](https://neetcode.io)
 
 
 - **Service mesh**
@@ -106,6 +107,7 @@ This is a collection of resources to skill up in Cloud and Backend Engineering.
 - **Algorithms**
 	- Grokking Algorithms `book`
 	- A Common-Sense Guide to Data Structures and Algorithms `book`
+	- [needcode.io](https://neetcode.io)
 
 
 - External APIs: GitHub Data Management	`workshop`
