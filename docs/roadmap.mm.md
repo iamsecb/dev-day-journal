@@ -52,6 +52,7 @@ This is a collection of resources to skill up in Cloud and Backend Engineering.
 
 - **EKS**
 	- AWS EKS Kubernetes-Masterclass `course:udemy`
+	- [EKS immersion day](https://catalog.workshops.aws/eks-immersionday/en-US) `course:aws`
 
 - **Containers**
 	- [Learning Containers, Kubernetes, and Backend Development](https://iximiuz.com/) `blog`
