@@ -107,7 +107,7 @@ This is a collection of resources to skill up in Cloud and Backend Engineering.
 - **Algorithms**
 	- Grokking Algorithms `book`
 	- A Common-Sense Guide to Data Structures and Algorithms `book`
-	- [needcode.io](https://neetcode.io)
+	- [neetcode.io](https://neetcode.io)
 
 
 - External APIs: GitHub Data Management	`workshop`
