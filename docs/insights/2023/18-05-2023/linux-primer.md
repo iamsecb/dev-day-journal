@@ -11,26 +11,26 @@ tags:
 - Controls the hardware when the OS talks to the kernel via system calls. The 
   kernel translates these requests into instructions that the hardware can 
   understand. 
-- Allocates memory and schedules processes to run applications
-- First piece of software loaded into a protected area of memory when a computer starts up so that it cannot be overwritten
+- Allocates memory and schedules processes to run applications.
+- First piece of software loaded into a protected area of memory when a computer starts up so that it cannot be overwritten.
 
 In the command `ps -ef` PID 1 is the initial process started by the kernel. 
 
 ### What is a system call?
 
-When an application is run it by default runs in user space. When it requires access to hardware like disk for example it must make a request to the kernel which is known as a "system call". 
+When an application is run, by default it runs in user space. When it requires access to hardware like disk for example it must make a request to the kernel which is known as a "system call". 
 
 Here are some common scenarios where applications make system calls to the kernel:
 
-File operations: When an application needs to read from or write to files, it makes system calls to the kernel to perform file-related operations, such as opening files, reading data, writing data, closing files, and modifying file attributes.
+**File operations**: When an application needs to read from or write to files, it makes system calls to the kernel to perform file-related operations, such as opening files, reading data, writing data, closing files, and modifying file attributes.
 
-Network communication: Applications that require network connectivity, such as web browsers or email clients, make system calls to the kernel to establish network connections, send data over the network, receive incoming data, and manage network sockets.
+**Network communication**: Applications that require network connectivity, such as web browsers or email clients, make system calls to the kernel to establish network connections, send data over the network, receive incoming data, and manage network sockets.
 
-Process management: Applications may need to create new processes, terminate processes, or perform other process-related operations. These tasks involve system calls to the kernel, which handles process scheduling, memory management, and inter-process communication.
+**Process management**: Applications may need to create new processes, terminate processes, or perform other process-related operations. These tasks involve system calls to the kernel, which handles process scheduling, memory management, and inter-process communication.
 
-Memory management: When an application requires memory allocation or deallocation, it relies on system calls to the kernel to request memory resources. The kernel manages the system's memory and fulfills these requests, ensuring proper memory allocation and protection.
+**Memory management**: When an application requires memory allocation or deallocation, it relies on system calls to the kernel to request memory resources. The kernel manages the system's memory and fulfills these requests, ensuring proper memory allocation and protection.
 
-Interacting with devices: Applications make system calls to interact with hardware devices like disks, printers, graphics cards, and input/output devices. These system calls enable the application to perform operations on the devices with the assistance of the kernel and relevant device drivers.
+**Interacting with devices**: Applications make system calls to interact with hardware devices like disks, printers, graphics cards, and input/output devices. These system calls enable the application to perform operations on the devices with the assistance of the kernel and relevant device drivers.
 
 If you run an application as root, it still runs within the user space but is granted elevated privilges that normally would not exist like modifying system files, changing system level configuration etc.
 
@@ -50,6 +50,7 @@ Should follow File System Hierachy guide as per https://en.wikipedia.org/wiki/Fi
 `syslog`: Contains the centralized logging system, called syslog, in which you’ll find messages related to the kernel, applications, and more. If configured, this could be the centralized log file for all Linux systems (or even all network devices) in your data center.
 
 `auth.log`: Contains authentication failures and successes
+
 `messages`: Contains general system messages of all types
 
 
@@ -75,7 +76,7 @@ The following are notes from the article https://iximiuz.com/en/posts/container-
 
 <sub>Disclaimer: The notes are my own and if there are mistakes it is not relfective of the article.</sub>
 
-#### What is linux network stack?
+#### What is a linux network stack?
 
 An isolated network device, routing rules and any filters set by ip tables. The isolation provided by linux via a network namespace can be setup via the command `ip netns`.
 
