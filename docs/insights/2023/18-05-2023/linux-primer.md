@@ -1,6 +1,8 @@
 ---
+title: Linux Primer
 tags:
-  - dummy
+  - networking
+  - linux
 ---
 ## Insights
 
@@ -13,7 +15,6 @@ tags:
 - First piece of software loaded into a protected area of memory when a computer starts up so that it cannot be overwritten
 
 In the command `ps -ef` PID 1 is the initial process started by the kernel. 
-
 
 ### What is a system call?
 
@@ -33,32 +34,30 @@ Interacting with devices: Applications make system calls to interact with hardwa
 
 If you run an application as root, it still runs within the user space but is granted elevated privilges that normally would not exist like modifying system files, changing system level configuration etc.
 
-
-
 ### Files
 
-
-- /bin, /sbin, /usr/bin, and /usr/sbin. Where executable programs are stored.
-- /dev. Where files representing hardware devices are stored. For example, if your Linux system had a floppy drive device, there would be a file named fd0 in the dev folder (/dev/fd0).
-- /etc. Where configuration files are stored.
-- /home. Where user home directories are stored, one for each
+- `/bin`, `/sbin`, `/usr/bin`, and `/usr/sbin`: Where executable programs are stored.
+- `/dev`: Where files representing hardware devices are stored. For example, if your Linux system had a floppy drive device, there would be a file named fd0 in the dev folder (/dev/fd0).
+- `/etc`: Where configuration files are stored.
+- `/home`: Where user home directories are stored, one for each
 user.
-- /var. Where variable-length files, like log files, are stored.
+- `/var`. Where variable-length files, like log files, are stored.
 
 Should follow File System Hierachy guide as per https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 
 #### Log files
 
-syslog. Contains the centralized logging system, called syslog, in which you’ll find messages related to the kernel, applications, and more. If configured, this could be the centralized log file for all Linux systems (or even all network devices) in your data center.
-• auth.log. Contains authentication failures and successes
-• messages. Contains general system messages of all types
+`syslog`: Contains the centralized logging system, called syslog, in which you’ll find messages related to the kernel, applications, and more. If configured, this could be the centralized log file for all Linux systems (or even all network devices) in your data center.
+
+`auth.log`: Contains authentication failures and successes
+`messages`: Contains general system messages of all types
 
 
 ### Network interfaces 
 
-Loopback. The loopback (lo) interface will have an IP address of 127.0.0.1, which represents the host itself.
+The **loopback (`lo`)** interface will have an IP address of 127.0.0.1, which represents the host itself.
 
-Ethernet. The ethernet 0 (eth0) interface is typically the connection to the local network. Even if you are running Linux in a virtual machine (VM), you’ll still have an eth0 interface that connects to the physical network interface of the host. Most commonly, you should ensure that eth0 is in an UP state and has an IP address so that you can communicate with the local network and likely over the Internet.
+The **ethernet 0** (`eth0`) interface is typically the connection to the local network. Even if you are running Linux in a virtual machine (VM), you’ll still have an `eth0` interface that connects to the physical network interface of the host. Most commonly, you should ensure that eth0 is in an UP state and has an IP address so that you can communicate with the local network and likely over the Internet.
 
 
 ### Commands
@@ -69,9 +68,6 @@ Ethernet. The ethernet 0 (eth0) interface is typically the connection to the loc
 `netstat -l`      : Active listening services
 `ip neighbour`    : ARP cache table (IP to MAC)
 `ifup/ifdown` .   : Restart an interfaces without having to restart a servero
-
-
-
 
 ### Container networking made simple
 
@@ -361,15 +357,20 @@ However, accessing the internet as per our `ping 8.8.8.8` command still fails.
 
 #### NAT
 
+The article linked above describes it best:
 
+> Before going to the external network, packets originated by the containers will get their source IP addresses replaced with the host's external interface address. The host also will track all the existing mappings and on arrival, it'll be restoring the IP addresses before forwarding packets back to the containers.
+
+This is achieved by the following `iptables` rule:
 
 ```bash
 sudo sysctl net.ipv4.ip_forward=1
 sudo iptables -t nat -A POSTROUTING -s 172.18.0.0/16 -o eth0 -j MASQUERADE
 ```
 
+This rule ensures that any packet originating from the `172.18.0.0/16` network and going out through the `eth0` interface will have its source IP address changed to match the IP address of the `eth0` interface. This allows devices in the `172.18.0.0/16` network to communicate with the internet using the IP address of the `eth0` interface.
 
-
+To be continued..
 
 ### Summary
 
@@ -404,76 +405,4 @@ exit
 sudo ip route del 172.18.0.0/16 dev veth0 proto kernel scope link src 172.18.0.11
 sudo nsenter --net=/var/run/netns/netns1
 arping -c 1 -I ceth1 10.0.2.15
-```
-
-This only works when the route `172.18.0.0/16` for `172.18.0.11` is deleted. 
-
-```
-  +----------------+          +---------------------+           +---------------------+          +-----------------+
-  |                |          |                     |           |                     |          |                 |
-  |   netns0       |          |          Host       |           |       Host          |          |     netns1      |
-  |                |          |                     |           |                     |          |                 |
-  |  +---------+   |          |  +---------------+  |           |  +---------------+  |          | +-----------+   |
-  |  | veth0   |   |          |  | veth0         |  |           |  | veth1         |  |          | |  veth1    |   |
-  |  |         |---+----------+--|               |  |           |  |               |----------+- | |           |
-  |  |         |   |          |  | 172.18.0.11   |  |           |  | 172.18.0.21   |  |          | |           |   |
-  |  | ceth0   |   |          |  | 172.18.0.1    |  |           |  | 172.18.0.1    |  |          |                      1  |         |   |          |  |               |  |           |  |               |  |          | |           |   |
-  |  +---------+   |          |  +---------------+  |           |  +---------------+  |          | +-----------+   |
-  |                |          |                     |           |                     |          |                 |
-  +----------------+          +---------------------+           +---------------------+          +-----------------+
-
-Legend:
-- netns0: a network namespace
-- netns1: a network namespace
-- veth0: a virtual Ethernet interface pair
-- veth1: a virtual Ethernet interface pair
-- ceth0: a virtual Ethernet interface attached to netns0
-- ceth1: a virtual Ethernet interface attached to netns1
-- Host: the host machine
-- 172.18.0.1: the IP address of the host's interface connected to the network that contains both netns0 and netns1
-- 172.18.0.11: the IP address of the veth0 interface in netns0
-- 172.18.0.21: the IP address of the veth1 interface in netns1
-- 10.0.2.15: the IP address of a remote device that the arping command is trying to reach
-
-Communication flow:
-
-1. The arping command is run from the netns1namespace to send an ARP request to the IP address 10.0.2.15:
-   - The arping command sends an ARP request packet with a source IP address of 172.18.0.20 and a destination IP address of 10.0.2.15.
-   - The networking stack in netns1 encapsulates the ARP request packet in an Ethernet frame with a source MAC address of veth1 and a destination MAC address of the default gateway (172.18.0.21).
-   - The Ethernet frame is sent out through the veth1 interface.
-
-2. The Ethernet frame with the ARP request packet enters the host networking stack:
-   - The host networking stack receives the Ethernet frame on the interface connected to the same network segment as veth1.
-   - The host networking stack inspects the destination MAC address of the Ethernet frame and determines that the Ethernet frame is intended for the host.
-   - The host networking stack decapsulates the ARP request packet from the Ethernet frame.
-
-3. The host networking stack processes the ARP request packet:
-   - The host networking stack receives the ARP request packet and determines that the destination IP address is on a different network segment than the one that the packet was received on.
-   - The host networking stack looks up the routing table to determine the next hop for the packet. The routing table contains a route for the 172.18.0.0/16 network that is routed through the veth0 interfacewith a source IP address of 172.18.0.11.
-   - The host networking stack encapsulates the ARP request packet in an Ethernet frame with a source MAC address of veth0 and a destination MAC address of the default gateway (172.18.0.1).
-   - The Ethernet frame is sent out through the veth0 interface.
-
-4. The Ethernet frame with the ARP request packet enters the network segment connected to the host's interface with IP address 172.18.0.1:
-   - The Ethernet frame is received by the device with IP address 172.18.0.1.
-   - The device determines that the Ethernet frame is intended for the default gateway and forwards it to the next hop (which could be another router or the destination device).
-
-5. The Ethernet frame with the ARP request packet arrives at the next hop:
-   - The Ethernet frame is received by the next hop device.
-   - The next hop device looks up the routing table to determine the next hop for the packet (which could be another router or the destination device).
-   - If the next hop device is the destination device, it responds to the ARP request with an ARP reply packet.
-
-6. The ARP reply packet is sent back to the host:
-   - The ARP reply packet is encapsulated in an Ethernet frame with a source MAC address of the device's MAC address and a destination MAC address of veth0.
-   - The Ethernet frame is sent back to thehost through the network segments it traversed to reach the destination device.
-
-7. The Ethernet frame with the ARP reply packet enters the host networking stack:
-   - The Ethernet frame is received by the host networking stack on the veth0 interface.
-   - The host networking stack inspects the destination MAC address of the Ethernet frame and determines that the Ethernet frame is intended for the host.
-   - The host networking stack decapsulates the ARP reply packet from the Ethernet frame.
-
-8. The host networking stack updates the ARP cache and sends the ARP reply packet to the arping process:
-   - The host networking stack updates the ARP cache with the MAC address of the device that responded to the ARP request.
-   - The host networking stack sends the ARP reply packet to the process that issued the ARP request (in this case, the arping process running in netns1).
-
-Note that in step 4, the device with IP address 172.18.0.1 could be the host itself, if the veth0 interface is connected directly to the host's interface with IP address 172.18.0.1. In this case, the Ethernet frame with the ARP request packet would not need to traverse any network segments, and the ARP reply packet would be sent directly back to the veth0 interface.
 ```
