@@ -1,4 +1,5 @@
 ---
+title: Adapter Pattern
 tags:
   - api-design
   - go

@@ -1,4 +1,5 @@
 ---
+title: Go Reusing HTTP Client
 tags:
   - api-design
   - go
