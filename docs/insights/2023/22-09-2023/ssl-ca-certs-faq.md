@@ -63,4 +63,23 @@ In the SSL handshake, when the browser receives the server's certificate, it nee
 
 If any step fails in this process (e.g., a certificate is expired, revoked, or the signature is invalid), the client will not trust the certificate, and the connection may be terminated or a warning message displayed.
 
+### How do you retrieve the certificates from a domain programatically?
+
+```
+openssl s_client -showcerts -connect  foo.com -servername  foo.com  </dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > foo.com.pem
+```
+
+
+### What is the difference between signing a certificate and encrypting?
+
+They are related in that they use the same encryption algorithm e.g: RS256. 
+
+However they serve different purposes.
+
+**Signing**: Used to maintain integrity and authenticity when the CA signs a certificate or an OIDC server signs a token.  The data is hashed and then signed by the server's private key. The client or relying party uses the public key to expose the hashed data by decrypting the signature or message. When we refer to "signing", we generally mean to use a private key to sign a piece of data that can be extracted via the public key.
+
+
+**Encryption**: Use to maintain confidentiality where the client encrypts the data using the server's public key (available to the client) that is then decrypted by the server's private key. 
+
+
 
